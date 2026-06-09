@@ -1,0 +1,20 @@
+{
+  "name": "web-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ai-agent-sdk Web 智能体案例",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter server dev\" \"pnpm --filter client dev\"",
+    "dev:server": "pnpm --filter server dev",
+    "dev:client": "pnpm --filter client dev",
+    "lint:server": "pnpm --filter server lint",
+    "lint:client": "pnpm --filter client lint",
+    "lint": "pnpm lint:server; pnpm lint:client",
+    "format": "prettier --write \"server/src/**/*.ts\" \"client/src/**/*.{ts,tsx}\" \"shared/**/*.ts\"",
+    "format:check": "prettier --check \"server/src/**/*.ts\" \"client/src/**/*.{ts,tsx}\" \"shared/**/*.ts\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prettier": "^3.3.2"
+  }
+}
