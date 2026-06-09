@@ -1,5 +1,5 @@
 import { tool } from '@langchain/core/tools';
-import type { StructuredTool } from '@langchain/core/tools';
+import type { StructuredToolInterface } from '@langchain/core/tools';
 import type { ZodSchema } from 'zod';
 import type { DefineToolConfig } from '../core/types';
 
@@ -8,7 +8,7 @@ import type { DefineToolConfig } from '../core/types';
  */
 export function defineTool<T extends Record<string, unknown>>(
   config: DefineToolConfig<T>,
-): StructuredTool {
+): StructuredToolInterface {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   return tool(
     async (params: any) => {
@@ -19,7 +19,7 @@ export function defineTool<T extends Record<string, unknown>>(
       description: config.description,
       schema: config.parameters as any,
     },
-  ) as unknown as StructuredTool;
+  ) as unknown as StructuredToolInterface;
   /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
@@ -33,8 +33,8 @@ export abstract class BaseTool {
 
   abstract execute(params: Record<string, unknown>): Promise<string> | string;
 
-  /** 将 BaseTool 转换为 StructuredTool */
-  toStructuredTool(): StructuredTool {
+  /** 将 BaseTool 转换为 StructuredToolInterface */
+  toStructuredTool(): StructuredToolInterface {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     return tool(
       async (params: any) => {
@@ -45,7 +45,7 @@ export abstract class BaseTool {
         description: this.description,
         schema: this.parameters as any,
       },
-    ) as unknown as StructuredTool;
+    ) as unknown as StructuredToolInterface;
     /* eslint-enable @typescript-eslint/no-explicit-any */
   }
 }
@@ -54,17 +54,17 @@ export abstract class BaseTool {
  * 工具注册表
  */
 export class ToolRegistry {
-  private tools: Map<string, StructuredTool> = new Map();
+  private tools: Map<string, StructuredToolInterface> = new Map();
 
-  register(tool: StructuredTool): void {
+  register(tool: StructuredToolInterface): void {
     this.tools.set(tool.name, tool);
   }
 
-  get(name: string): StructuredTool | undefined {
+  get(name: string): StructuredToolInterface | undefined {
     return this.tools.get(name);
   }
 
-  getAll(): StructuredTool[] {
+  getAll(): StructuredToolInterface[] {
     return Array.from(this.tools.values());
   }
 }

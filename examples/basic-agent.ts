@@ -10,7 +10,7 @@ import { createAgent, calculatorTool, dateTimeTool } from '../src';
 
 async function main() {
   // 创建 Agent（声明式 API）
-  const agent = createAgent({
+  const agent = await createAgent({
     model: process.env.OPENAI_MODEL || 'gpt-4',
     tools: [calculatorTool, dateTimeTool],
     prompt: '你是一个智能助手，可以使用工具来帮助用户完成任务。请用中文回答。',

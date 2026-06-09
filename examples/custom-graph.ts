@@ -12,6 +12,7 @@ interface MyState {
   input: string;
   classification: string;
   result: string;
+  [key: string]: unknown;
 }
 
 async function main() {
