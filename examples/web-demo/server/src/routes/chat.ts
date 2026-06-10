@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { Agent } from 'ai-agent-sdk';
+import type { Agent } from '@jiahao/ai-agent-sdk';
 import type { ChatRequest } from '../../../shared/types';
 
 /**
@@ -31,8 +31,16 @@ export function createChatRouter(agent: Agent): Router {
 
     try {
       // 使用 Agent 的 stream 方法获取流式输出
-      const result = await agent.stream(message, (chunk: string) => {
-        sendEvent('token', { content: chunk });
+      const result = await agent.stream(message, {
+        onToken: (chunk: string) => {
+          sendEvent('token', { content: chunk });
+        },
+        onToolStart: tool => {
+          sendEvent('tool_start', { tool: tool.tool, args: tool.args });
+        },
+        onToolEnd: tool => {
+          sendEvent('tool_end', { tool: tool.tool, result: tool.result });
+        },
       });
 
       // 发送完成事件

@@ -8,8 +8,8 @@ export type MCPTransport = 'stdio' | 'http' | 'sse';
 
 /** MCP 服务器配置 */
 export interface MCPServerConfig {
-  /** 传输方式 */
-  transport: MCPTransport;
+  /** 传输方式（可选，可从 command/url 自动推断） */
+  transport?: MCPTransport;
   /** stdio 命令（仅 stdio） */
   command?: string;
   /** stdio 参数（仅 stdio） */
@@ -45,19 +45,33 @@ export class MCPClientManager {
     // 将 MCPServerConfig 转换为 MultiServerMCPClient 所需的配置格式
     const mcpServers: Record<string, Record<string, unknown>> = {};
     for (const [name, config] of Object.entries(servers)) {
-      if (config.transport === 'stdio') {
+      // 自动推断 transport：command → stdio，url → http
+      let transport = config.transport;
+      if (!transport) {
+        if (config.command) {
+          transport = 'stdio';
+        } else if (config.url) {
+          transport = 'http';
+        } else {
+          throw new Error(
+            `[MCP] 服务器 "${name}" 配置无效：必须指定 transport，或提供 command / url 字段`,
+          );
+        }
+      }
+
+      if (transport === 'stdio') {
         mcpServers[name] = {
           transport: 'stdio',
           command: config.command || '',
           args: config.args || [],
         };
-      } else if (config.transport === 'http') {
+      } else if (transport === 'http') {
         mcpServers[name] = {
           transport: 'http',
           url: config.url || '',
           headers: config.headers,
         };
-      } else if (config.transport === 'sse') {
+      } else if (transport === 'sse') {
         mcpServers[name] = {
           transport: 'sse',
           url: config.url || '',

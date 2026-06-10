@@ -5,6 +5,8 @@ export type {
   AgentConfig,
   AgentResult,
   Agent,
+  StreamEvents,
+  Skill,
   DefineToolConfig,
   GraphState,
   NodeHandler,

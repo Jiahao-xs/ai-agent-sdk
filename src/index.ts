@@ -6,6 +6,8 @@ export type {
   AgentConfig,
   AgentResult,
   Agent,
+  StreamEvents,
+  Skill,
   DefineToolConfig,
   GraphState,
   NodeHandler,
@@ -27,3 +29,13 @@ export { MCPClientManager, mergeTools, createMCPClient } from './mcp';
 // Agent
 export { createAgent } from './agents/create-agent';
 export { AgentGraph } from './agents/agent-graph';
+
+// Skill 技能插件
+export {
+  loadSkill,
+  loadSkills,
+  parseSkillFile,
+  resolveToolByName,
+  mergeSkills,
+} from './skills';
+export type { SkillFrontmatter, MergedSkillResult } from './skills';

@@ -22,6 +22,24 @@ export interface LLMConfig {
 /** 模型输入：字符串 | 配置对象 | LangChain 实例 */
 export type ModelInput = string | LLMConfig | BaseChatModel;
 
+// ─── Skill 相关类型 ───
+
+/** Skill 技能插件 */
+export interface Skill {
+  /** 唯一标识 */
+  name: string;
+  /** 一句话说明 */
+  description?: string;
+  /** 语义化版本 */
+  version?: string;
+  /** Markdown body 指令内容 */
+  content: string;
+  /** 声明需要的工具名（从内置注册表或 toolPool 查找） */
+  requiredTools?: string[];
+  /** 声明需要的 MCP 服务器配置 */
+  requiredMcpServers?: Record<string, MCPServerConfig>;
+}
+
 // ─── Agent 相关类型 ───
 
 /** Agent 配置 */
@@ -36,6 +54,10 @@ export interface AgentConfig {
   verbose?: boolean;
   /** MCP 服务器配置（可选） */
   mcpServers?: Record<string, MCPServerConfig>;
+  /** Skill 技能插件列表（可选） */
+  skills?: Skill[];
+  /** 自定义工具池，供 Skill 按名称查找（可选） */
+  toolPool?: StructuredToolInterface[];
 }
 
 /** Agent 执行结果 */
@@ -44,10 +66,20 @@ export interface AgentResult {
   duration: number;
 }
 
+/** 流式回调事件集合 */
+export interface StreamEvents {
+  /** 收到 LLM 文本片段 */
+  onToken?: (chunk: string) => void;
+  /** 工具开始调用 */
+  onToolStart?: (tool: { tool: string; args: Record<string, unknown> }) => void;
+  /** 工具调用完成 */
+  onToolEnd?: (tool: { tool: string; result: string }) => void;
+}
+
 /** Agent 实例接口 */
 export interface Agent {
   run(input: string): Promise<AgentResult>;
-  stream(input: string, onChunk: (chunk: string) => void): Promise<AgentResult>;
+  stream(input: string, events: StreamEvents): Promise<AgentResult>;
   /** 清理 MCP 连接资源（未配置 MCP 时为 no-op） */
   close(): Promise<void>;
 }
