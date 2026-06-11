@@ -15,9 +15,9 @@
 ## 安装
 
 ```bash
-npm install ai-agent-sdk
+npm i @jiahao/ai-agent-sdk
 # 或
-pnpm add ai-agent-sdk
+pnpm add @jiahao/ai-agent-sdk
 ```
 
 ## 环境变量
