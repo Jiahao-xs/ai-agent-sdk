@@ -1,6 +1,6 @@
 {
   "name": "@jiahao/ai-agent-sdk",
-  "version": "0.1.1",
+  "version": "0.1.12",
   "description": "基于 LangGraph 的通用 AI 智能体 SDK，提供声明式和图构建器双层 API",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
